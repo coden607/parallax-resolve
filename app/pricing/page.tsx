@@ -1,0 +1,1 @@
+export default function Pricing(){return <main className="wrap"><h1 style={{fontSize:'3rem'}}>Pricing</h1><div className="grid"><div className="card"><h2>Free</h2><p>Core conflict analysis and local history.</p></div><div className="card"><h2>Pro</h2><p>Coming soon: Credibility Insight Pro, cloud sync, deeper reports.</p></div></div></main>}
