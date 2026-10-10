@@ -1,0 +1,1 @@
+export default function Settings(){return <main className="wrap"><h1 style={{fontSize:'3rem'}}>Settings</h1><div className="card"><b>Privacy-first MVP</b><p className="muted">History is stored locally. OpenRouter credentials remain server-side and are never shipped to the browser.</p></div></main>}
