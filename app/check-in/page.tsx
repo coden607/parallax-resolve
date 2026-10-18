@@ -24,7 +24,7 @@ export default function CheckIn(){
   const [form,setForm]=useState<Omit<Entry,'id'|'at'>>({connection:5,trust:5,communication:5,stress:5,note:''});
   const [promptIndex,setPromptIndex]=useState(0);
 
-  useEffect(()=>{try{const raw=JSON.parse(localStorage.getItem(key)||'[]');setItems(Array.isArray(raw)?raw:[])}catch{}},[]);
+  useEffect(()=>{try{const raw=JSON.parse(localStorage.getItem(key)||'[]');const migrated=Array.isArray(raw)?raw.map((x:Partial<Entry>,i:number)=>({...x,id:typeof x.id==='string'?x.id:'legacy-'+i+'-'+String(x.at||'')} as Entry)):[];setItems(migrated)}catch{}},[]);
   const persist=(next:Entry[])=>{setItems(next);localStorage.setItem(key,JSON.stringify(next))};
   const windows=useMemo(()=>{
     const now=Date.now(),day=86400000;
