@@ -23,15 +23,16 @@ export default function CheckIn(){
   const [items,setItems]=useState<Entry[]>([]);
   const [form,setForm]=useState<Omit<Entry,'id'|'at'>>({connection:5,trust:5,communication:5,stress:5,note:''});
   const [promptIndex,setPromptIndex]=useState(0);
+  const [now]=useState(()=>Date.now());
 
   useEffect(()=>{try{const raw=JSON.parse(localStorage.getItem(key)||'[]');const migrated=Array.isArray(raw)?raw.map((x:Partial<Entry>,i:number)=>({...x,id:typeof x.id==='string'?x.id:'legacy-'+i+'-'+String(x.at||'')} as Entry)):[];setItems(migrated)}catch{}},[]);
   const persist=(next:Entry[])=>{setItems(next);localStorage.setItem(key,JSON.stringify(next))};
   const windows=useMemo(()=>{
-    const now=Date.now(),day=86400000;
+    const day=86400000;
     const recent=items.filter(x=>now-new Date(x.at).getTime()<7*day);
     const previous=items.filter(x=>{const age=now-new Date(x.at).getTime();return age>=7*day&&age<14*day});
     return {recent,previous};
-  },[items]);
+  },[items,now]);
 
   function save(){
     const x:Entry={...form,id:crypto.randomUUID(),at:new Date().toISOString()};
