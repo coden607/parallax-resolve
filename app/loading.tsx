@@ -1,0 +1,1 @@
+export default function Loading(){return <main className="wrap"><span className="pill">Loading</span><h1 style={{fontSize:'3rem'}}>Preparing workspace…</h1><p className="muted">Loading your local tools.</p></main>}
