@@ -51,11 +51,13 @@ export default function Analyze(){
         if(Modes.includes(draft.mode))setMode(draft.mode);
       }
     }catch{}
+    setHydrated(true);
   },[]);
 
   useEffect(()=>{
+    if(!hydrated)return;
     localStorage.setItem(draftKey,JSON.stringify({situation,goal,evidenceNotes,physiology,tagText,mode}));
-  },[situation,goal,evidenceNotes,physiology,tagText,mode]);
+  },[hydrated,situation,goal,evidenceNotes,physiology,tagText,mode]);
 
   function persist(next:Saved[]){setHistory(next);localStorage.setItem(historyKey,JSON.stringify(next))}
   function clearDraft(){setSituation('');setGoal('');setEvidenceNotes('');setPhysiology('');setTagText('');setResult(null);setError('');localStorage.removeItem(draftKey)}
