@@ -1,4 +1,29 @@
-import OpenAI from 'openai'; import {NextResponse} from 'next/server'; import {z} from 'zod'; import {Modes,ResultSchema} from '@/lib/schema';
+import OpenAI from 'openai'; import {NextResponse} from 'next/server'; import {z} from 'zod'; import {createHash} from 'node:crypto'; import {Modes,ResultSchema} from '@/lib/schema';
+type Bucket={count:number;resetAt:number};
+const buckets=new Map<string,Bucket>();
+const WINDOW_MS=60_000;
+const MAX_REQUESTS=6;
+
+function rateLimit(req:Request){
+  const forwarded=req.headers.get('x-forwarded-for')?.split(',')[0]?.trim();
+  const raw=forwarded||req.headers.get('x-real-ip')||'unknown';
+  const key=createHash('sha256').update(raw).digest('hex').slice(0,20);
+  const now=Date.now();
+  const current=buckets.get(key);
+  if(!current||now>=current.resetAt){
+    buckets.set(key,{count:1,resetAt:now+WINDOW_MS});
+    return {ok:true,retryAfter:0};
+  }
+  if(current.count>=MAX_REQUESTS){
+    return {ok:false,retryAfter:Math.max(1,Math.ceil((current.resetAt-now)/1000))};
+  }
+  current.count+=1;
+  if(buckets.size>1000){
+    for(const [k,v] of buckets)if(now>=v.resetAt)buckets.delete(k);
+  }
+  return {ok:true,retryAfter:0};
+}
+
 const Input=z.object({
   situation:z.string().trim().min(10).max(12000),
   goal:z.string().trim().max(2000).optional(),
@@ -41,6 +66,8 @@ Core rules:
 - Relationship health scores are structured reflection aids based only on supplied information, not clinical assessments.`;
 
 export async function POST(req:Request){
+  const limit=rateLimit(req);
+  if(!limit.ok)return NextResponse.json({error:'Too many requests. Please try again shortly.'},{status:429,headers:{'Retry-After':String(limit.retryAfter),'Cache-Control':'no-store'}});
   try{
     const parsed=Input.safeParse(await req.json());
     if(!parsed.success)return NextResponse.json({error:'Enter at least 10 characters and choose a valid mode.'},{status:400});
