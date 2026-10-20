@@ -64,7 +64,7 @@ Return JSON only with keys summary, facts[], assumptions[], perspectives[], evid
     if(!raw)throw new Error('Empty model response');
     const result=ResultSchema.parse(JSON.parse(raw));
     return NextResponse.json(result,{headers:{'Cache-Control':'no-store'}});
-  }catch(e){
+  }catch{
     console.error('analysis_failed');
     return NextResponse.json({error:'Analysis could not be completed. Please try again.'},{status:500});
   }

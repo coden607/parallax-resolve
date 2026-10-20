@@ -1,12 +1,14 @@
 'use client';
 import {useEffect,useMemo,useRef,useState} from 'react';
 import Link from 'next/link';
+import {useRouter} from 'next/navigation';
 import {Modes,type Analysis} from '@/lib/schema';
 
 type Saved={id:string;at:string;mode:string;situation:string;goal?:string;evidenceNotes?:string;tags?:string[];favorite?:boolean;result:Analysis};
 const key='parallax-history';
 
 export default function Dashboard(){
+  const router=useRouter();
   const [items,setItems]=useState<Saved[]>([]);
   const [query,setQuery]=useState('');
   const [mode,setMode]=useState('All');
@@ -30,7 +32,7 @@ export default function Dashboard(){
   function toggle(id:string){persist(items.map(x=>x.id===id?{...x,favorite:!x.favorite}:x))}
   function reopen(x:Saved){
     localStorage.setItem('parallax-draft',JSON.stringify({situation:x.situation,goal:x.goal||'',evidenceNotes:x.evidenceNotes||'',tagText:(x.tags||[]).join(', '),mode:x.mode,physiology:''}));
-    window.location.href='/analyze';
+    router.push('/analyze');
   }
   function exportHistory(){
     const blob=new Blob([JSON.stringify({version:1,exportedAt:new Date().toISOString(),history:items},null,2)],{type:'application/json'});
