@@ -1,0 +1,1 @@
+'use client';export default function ErrorPage({reset}:{reset:()=>void}){return <main className="wrap"><span className="pill">Something went wrong</span><h1 style={{fontSize:'3.4rem'}}>Could not load this view</h1><p className="muted">Your local data has not been intentionally cleared.</p><button className="btn" onClick={reset}>Try again</button></main>}
