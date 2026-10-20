@@ -33,7 +33,8 @@ export default function Analyze(){
   const [result,setResult]=useState<Analysis|null>(null);
   const [loading,setLoading]=useState(false);
   const [error,setError]=useState('');
-  const [history,setHistory]=useState<Saved[]>([]);\n  const [hydrated,setHydrated]=useState(false);
+  const [history,setHistory]=useState<Saved[]>([]);
+  const [hydrated,setHydrated]=useState(false);
   const tags=useMemo(()=>tagText.split(',').map(x=>x.trim()).filter(Boolean).slice(0,6),[tagText]);
 
   useEffect(()=>{
