@@ -91,8 +91,11 @@ Return JSON only with keys summary, facts[], assumptions[], perspectives[], evid
     if(!raw)throw new Error('Empty model response');
     const result=ResultSchema.parse(JSON.parse(raw));
     return NextResponse.json(result,{headers:{'Cache-Control':'no-store'}});
-  }catch{
-    console.error('analysis_failed');
+  }catch(err){
+    // Server-side diagnostics only: never sent to the client, and key-like strings are redacted.
+    const e=err as {name?:string;status?:number;code?:string|null;type?:string;message?:string};
+    const message=String(e?.message??err).replace(/(sk|sk-or-v1|Bearer)[-_ ]?[A-Za-z0-9._-]{8,}/g,'[redacted]').slice(0,300);
+    console.error('analysis_failed',JSON.stringify({name:e?.name,status:e?.status,code:e?.code,type:e?.type,message,model:process.env.OPENROUTER_MODEL?'custom':'default'}));
     return NextResponse.json({error:'Analysis could not be completed. Please try again.'},{status:500});
   }
 }
