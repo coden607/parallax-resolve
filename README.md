@@ -1,5 +1,34 @@
 # Parallax Resolve
 
+<!-- showcase:start -->
+**A mobile-first conflict-reasoning app that separates facts from assumptions and helps plan calmer next steps.**
+
+[![Live demo](https://img.shields.io/badge/live_demo-parallax--resolve.vercel.app-2ea44f?logo=vercel)](https://parallax-resolve.vercel.app) [![License: MIT](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
+
+![Parallax Resolve live demo screenshot](docs/screenshot.png)
+
+**Live demo:** https://parallax-resolve.vercel.app
+
+### Highlights
+
+- Eight analysis modes, from Quick Review to Decision Support
+- Local-first saved analyses with search, tags, import/export and comparison
+- Relationship check-ins, journal, decision matrix, boundary builder and evidence ledger
+- Share-safe redaction and a neutral question bank
+
+**Tech stack:** Next.js (App Router), React, TypeScript, Tailwind CSS, Zod, OpenAI SDK via OpenRouter, Vercel
+
+**Run locally:**
+
+```bash
+npm install
+npm run dev     # http://localhost:3000
+# AI analysis needs OPENROUTER_API_KEY in your own .env.local
+```
+
+<!-- showcase:end -->
+
+
 **Understand first. Resolve wisely.**
 
 Parallax Resolve is a mobile-first conflict reasoning and relationship-support app. It separates facts from assumptions, compares perspectives, evaluates evidence quality, identifies unknowns and contradictions, and helps users plan calmer next steps without claiming to prove truth or deception.
